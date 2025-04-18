@@ -42,7 +42,10 @@
     },
     "ios": {
       "bundleIdentifier": "com.EXFLT444.Salas",
-      "buildNumber": "3" 
+      "buildNumber": "3"
+    },
+    "android": {
+      "package": "com.EXFLT444.Salas"
     }
   }
 }
