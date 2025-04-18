@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Salas",
-    "slug": "Salas",
-    "version": "1.0.0",
+    "name": "test1",
+    "slug": "test1",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -41,7 +41,8 @@
       "url": "https://u.expo.dev/c8aa9be0-1264-47a0-9fdc-9e442d17ce0d"
     },
     "ios": {
-      "bundleIdentifier": "com.EXFLT444.Salas"
+      "bundleIdentifier": "com.EXFLT444.Salas",
+      "buildNumber": "3" 
     }
   }
 }

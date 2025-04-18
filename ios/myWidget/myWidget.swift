@@ -116,7 +116,7 @@ struct myWidgetEntryView : View {
                     .foregroundColor(colorScheme == .dark ? .white : .gray)
                 
                 Text(entry.dayNumber)
-                    .font(.system(size: 62))
+                    .font(.system(size: 30))
                     .foregroundColor(colorScheme == .dark ? .white : .primary)
                     .padding(.top, -5)
             }
