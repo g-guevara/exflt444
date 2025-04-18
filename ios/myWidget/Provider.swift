@@ -1,13 +1,5 @@
 //
 //  Provider.swift
-//  Salas
-//
-//  Created by Guillermo Guevara on 18-04-25.
-//
-
-
-//
-//  Provider.swift
 //  test1
 //
 //  Created by Guillermo Guevara on 03-04-25.
