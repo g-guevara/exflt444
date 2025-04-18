@@ -1,12 +1,4 @@
-//
-//  Provider.swift
-//  test1
-//
-//  Created by Guillermo Guevara on 03-04-25.
-//
-
-
-// Provider.swift
+// Provider.swift - with fixed findClosestEvent function
 import WidgetKit
 import SwiftUI
 
@@ -79,32 +71,72 @@ struct Provider: TimelineProvider {
         completion(timeline)
     }
     
-    // Find event closest to current time
+    // Find event closest to current time - FIXED to prioritize upcoming events
     private func findClosestEvent(_ events: [SavedEvent], to currentDate: Date) -> SavedEvent? {
         guard !events.isEmpty else { return nil }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = "HH:mm:ss"
         
-        let currentTimeString = dateFormatter.string(from: currentDate)
-        let currentMinutes = minutesFromTimeString(currentTimeString)
+        // Get current time in minutes since midnight
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: currentDate)
+        let minute = calendar.component(.minute, from: currentDate)
+        let currentMinutes = hour * 60 + minute
         
-        var closestEvent: SavedEvent? = nil
-        var smallestDifference = Int.max
+        print("📱 Widget: Current time in minutes: \(currentMinutes)")
+        
+        // First, try to find the closest UPCOMING event
+        var closestUpcomingEvent: SavedEvent? = nil
+        var smallestUpcomingDifference = Int.max
+        
+        // Next, keep track of the closest past event as a fallback
+        var closestPastEvent: SavedEvent? = nil
+        var smallestPastDifference = Int.max
         
         for event in events {
-            guard let startTime = event.startTime else { continue }
+            guard let startTimeStr = event.startTime else { continue }
+            
+            // Extract just HH:mm if the format is longer
+            let startTime = startTimeStr.count > 5 ? String(startTimeStr.prefix(5)) : startTimeStr
             
             let eventMinutes = minutesFromTimeString(startTime)
-            let difference = abs(eventMinutes - currentMinutes)
+            print("📱 Widget: Event '\(event.text)' at \(startTime) = \(eventMinutes) minutes")
             
-            if difference < smallestDifference {
-                smallestDifference = difference
-                closestEvent = event
+            // Check if event is upcoming or past
+            if eventMinutes >= currentMinutes {
+                // This is an upcoming event
+                let difference = eventMinutes - currentMinutes
+                print("📱 Widget: Upcoming event, difference: \(difference) minutes")
+                
+                if difference < smallestUpcomingDifference {
+                    smallestUpcomingDifference = difference
+                    closestUpcomingEvent = event
+                    print("📱 Widget: New closest upcoming event: \(event.text)")
+                }
+            } else {
+                // This is a past event
+                let difference = currentMinutes - eventMinutes
+                print("📱 Widget: Past event, difference: \(difference) minutes")
+                
+                if difference < smallestPastDifference {
+                    smallestPastDifference = difference
+                    closestPastEvent = event
+                    print("📱 Widget: New closest past event: \(event.text)")
+                }
             }
         }
         
-        return closestEvent
+        // Prioritize upcoming events; if none available, use closest past event
+        if let upcomingEvent = closestUpcomingEvent {
+            print("📱 Widget: Returning upcoming event: \(upcomingEvent.text)")
+            return upcomingEvent
+        } else if let pastEvent = closestPastEvent {
+            print("📱 Widget: No upcoming events, returning past event: \(pastEvent.text)")
+            return pastEvent
+        }
+        
+        return nil
     }
     
     // Convert time string to minutes since midnight for easy comparison
@@ -149,7 +181,7 @@ struct Provider: TimelineProvider {
             return []
         }
         
-        print("📱 Widget: Found savedEvents string with length: \(savedEventsString)")
+        print("📱 Widget: Found savedEvents string with length: \(savedEventsString.count)")
         
         guard let data = savedEventsString.data(using: .utf8) else {
             print("📱 Widget: Failed to convert saved events string to data")
