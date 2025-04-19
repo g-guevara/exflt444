@@ -3,6 +3,7 @@ import { StatusBar, Platform } from "react-native";
 import { Stack } from "expo-router";
 import { ThemeProvider, useTheme } from "./ThemeContext";
 import { DataSyncProvider } from "./DataProvider/DataSyncContext";
+import MenuOptions from "./MenuOptions";
 
 // Componente interno que usa el contexto de tema
 function StackNavigator() {
@@ -49,6 +50,7 @@ function StackNavigator() {
           name="Config" 
           options={{ 
             title: "Configuración",
+            headerRight: () => <MenuOptions />
           }} 
         />
         <Stack.Screen 
