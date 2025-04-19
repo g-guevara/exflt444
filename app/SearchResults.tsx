@@ -3,6 +3,7 @@ import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from
 import { styles } from './styles/Search.styles';
 import { Evento } from "./Search";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 interface SearchResultsProps {
   isLoading: boolean;
@@ -17,6 +18,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   filteredEventos, 
   isDarkMode 
 }) => {
+  const navigation = useNavigation();
   
   // Función para manejar la selección de un evento
   const handleEventSelection = (item: Evento) => {
@@ -52,7 +54,16 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
               const updatedSelectedEventos = [...selectedEventos, item];
               await AsyncStorage.setItem("selectedEventos", JSON.stringify(updatedSelectedEventos));
               
-              Alert.alert("Evento agregado", "El evento ha sido agregado a tu lista.");
+              Alert.alert(
+                "Evento agregado", 
+                "El evento ha sido agregado a tu lista.",
+                [
+                  {
+                    text: "OK",
+                    style: "default"
+                  }
+                ]
+              );
             } catch (error) {
               console.error("Error al guardar evento seleccionado:", error);
               Alert.alert("Error", "No se pudo guardar tu selección.");

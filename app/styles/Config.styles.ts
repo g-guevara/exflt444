@@ -117,6 +117,7 @@ export const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
   
   // Estado vacío

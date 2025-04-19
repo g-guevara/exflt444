@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Switch, TouchableOpacity, FlatList, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "./ThemeContext";
 import { styles } from './styles/Config.styles';
 import DataSyncInfo from "./DataProvider/DataSyncInfo";
@@ -38,17 +38,27 @@ const Config = () => {
   const { isDarkMode, toggleTheme, isThemeLoaded } = useTheme();
   const navigation = useNavigation();
 
-  // Cargar eventos seleccionados
+  // Cargar eventos seleccionados al principio
   useEffect(() => {
     loadSelectedEventos();
   }, []);
+
+  // Añadir useFocusEffect para recargar eventos cuando la pantalla vuelve a estar en foco
+  useFocusEffect(
+    React.useCallback(() => {
+      loadSelectedEventos();
+      return () => {};
+    }, [])
+  );
 
   // Cargar eventos seleccionados desde AsyncStorage
   const loadSelectedEventos = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem("selectedEventos");
       if (jsonValue !== null) {
-        setSelectedEventos(JSON.parse(jsonValue));
+        const events = JSON.parse(jsonValue);
+        setSelectedEventos(events);
+        console.log(`Eventos cargados en Config: ${events.length}`);
       }
     } catch (error) {
       console.error("Error al cargar eventos seleccionados:", error);

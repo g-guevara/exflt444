@@ -1,8 +1,9 @@
 // app/UserEventList.tsx
 import React from "react";
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 import { styles } from '../styles/User.styles';
 import { Evento, obtenerDiaSemana } from "./UserTypes";
+import { useNavigation } from "@react-navigation/native";
 
 interface UserEventListProps {
   isLoading: boolean;
@@ -23,24 +24,50 @@ const UserEventList: React.FC<UserEventListProps> = ({
   totalCount,
   toggleEventoSelection
 }) => {
+  const navigation = useNavigation();
+  
   // Check if an event is already selected
   const isEventoSelected = (evento: Evento) => {
     return selectedEventos.some(e => e._id === evento._id);
+  };
+
+  // Handle adding event with a simple confirmation
+  const handleAddEvent = (evento: Evento) => {
+    // First check if we're adding (not removing)
+    const alreadySelected = isEventoSelected(evento);
+    
+    // Toggle the selection
+    toggleEventoSelection(evento);
+    
+    // If we just added an event (wasn't previously selected), show simple alert
+    if (!alreadySelected) {
+      Alert.alert(
+        "Evento agregado",
+        `"${evento.Evento}" ha sido agregado a tus eventos seleccionados.`,
+        [
+          {
+            text: "OK",
+            style: "default"
+          }
+        ]
+      );
+    }
   };
 
   // Render each event item
   const renderEventItem = ({ item }: { item: Evento }) => {
     // Get day of week, either from item or calculate it
     const diaSemana = item.diaSemana || obtenerDiaSemana(item.Fecha);
+    const selected = isEventoSelected(item);
     
     return (
       <TouchableOpacity
         style={[
           styles.eventItem,
           isDarkMode && styles.darkEventItem,
-          isEventoSelected(item) && (isDarkMode ? styles.darkSelectedEventItem : styles.selectedEventItem)
+          selected && (isDarkMode ? styles.darkSelectedEventItem : styles.selectedEventItem)
         ]}
-        onPress={() => toggleEventoSelection(item)}
+        onPress={() => handleAddEvent(item)}
       >
         <View style={styles.eventContent}>
           <View style={styles.eventHeader}>
@@ -54,7 +81,7 @@ const UserEventList: React.FC<UserEventListProps> = ({
           </Text>
         </View>
         
-        {isEventoSelected(item) && (
+        {selected && (
           <View style={[styles.selectionIndicator, isDarkMode && styles.darkSelectionIndicator]}>
           </View>
         )}
