@@ -6,26 +6,114 @@ import {
   Modal, 
   StyleSheet, 
   Linking, 
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert,
+  Share,
+  Platform
 } from 'react-native';
 import Icon from "react-native-vector-icons/Ionicons";
 import { useTheme } from "./ThemeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface MenuOption {
   title: string;
-  url: string;
+  url?: string;
+  action?: () => void;
+  isShare?: boolean;
 }
 
-const menuOptions: MenuOption[] = [
-  { title: "Sitio Oficial UAI", url: "https://www.uai.cl" },
-  { title: "Portal del Alumno", url: "https://portal.uai.cl" },
-  { title: "Moodle", url: "https://cursos.uai.cl" },
-  { title: "Acerca De", url: "https://github.com/memoguevara" }
-];
+interface Evento {
+  _id: string;
+  Tipo: string;
+  Evento: string;
+  Fecha: string;
+  Inicio: string;
+  Fin: string;
+  Sala: string;
+  Edificio: string;
+  Campus: string;
+  fechaActualizacion: string;
+  diaSemana?: string;
+}
 
 const MenuOptions = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const { isDarkMode } = useTheme();
+
+  // Función para compartir eventos seleccionados
+  const shareSelectedEvents = async () => {
+    try {
+      // Cerrar modal primero
+      setModalVisible(false);
+      
+      // Obtener eventos seleccionados
+      const jsonValue = await AsyncStorage.getItem("selectedEventos");
+      if (!jsonValue) {
+        setTimeout(() => {
+          Alert.alert("Sin eventos", "No tienes eventos seleccionados para compartir.");
+        }, 300);
+        return;
+      }
+      
+      const selectedEvents: Evento[] = JSON.parse(jsonValue);
+      if (selectedEvents.length === 0) {
+        setTimeout(() => {
+          Alert.alert("Sin eventos", "No tienes eventos seleccionados para compartir.");
+        }, 300);
+        return;
+      }
+      
+      // Crear contenido de texto formateado
+      let textContent = "MIS EVENTOS SELECCIONADOS\n\n";
+      
+      selectedEvents.forEach((event, index) => {
+        // Determinar día de la semana
+        let diaSemana = event.diaSemana || "";
+        if (!diaSemana && event.Fecha) {
+          try {
+            const fecha = new Date(event.Fecha);
+            const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            diaSemana = diasSemana[fecha.getDay()];
+          } catch (error) {
+            console.error("Error al obtener día de la semana:", error);
+          }
+        }
+        
+        // Añadir evento al texto
+        textContent += `${index + 1}. ${event.Evento}\n`;
+        textContent += `   Tipo: ${event.Tipo}\n`;
+        textContent += `   Día: ${diaSemana}\n`;
+        textContent += `   Horario: ${event.Inicio.substring(0, 5)} - ${event.Fin.substring(0, 5)}\n`;
+        textContent += `   Ubicación: ${event.Sala}, ${event.Edificio}, ${event.Campus}\n\n`;
+      });
+      
+      // Añadir pie de página
+      textContent += "Exportado desde la app 7io-locale";
+      
+      // Compartir el contenido
+      setTimeout(async () => {
+        try {
+          const result = await Share.share({
+            message: textContent,
+            title: "Mis Eventos UAI"
+          });
+          
+          if (result.action === Share.sharedAction) {
+            console.log("Contenido compartido exitosamente");
+          }
+        } catch (error) {
+          console.error("Error al compartir eventos:", error);
+          Alert.alert("Error", "No se pudieron compartir los eventos.");
+        }
+      }, 300);
+      
+    } catch (error) {
+      console.error("Error preparando eventos para compartir:", error);
+      setTimeout(() => {
+        Alert.alert("Error", "Ocurrió un problema al preparar los eventos para compartir.");
+      }, 300);
+    }
+  };
 
   const openWebPage = (url: string) => {
     // Cerrar el modal primero
@@ -39,6 +127,15 @@ const MenuOptions = () => {
       });
     }, 300);
   };
+  
+  // Opciones del menú
+  const menuOptions: MenuOption[] = [
+    { title: "Compartir mis eventos", isShare: true, action: shareSelectedEvents },
+    { title: "Sitio Oficial UAI", url: "https://www.uai.cl" },
+    { title: "Portal del Alumno", url: "https://portal.uai.cl" },
+    { title: "Moodle", url: "https://cursos.uai.cl" },
+    { title: "Acerca De", url: "https://github.com/memoguevara" }
+  ];
 
   return (
     <View>
@@ -71,13 +168,29 @@ const MenuOptions = () => {
                     style={[
                       styles.option,
                       index < menuOptions.length - 1 && styles.optionBorder,
-                      isDarkMode && styles.darkOptionBorder
+                      isDarkMode && styles.darkOptionBorder,
+                      option.isShare && styles.shareOption
                     ]}
-                    onPress={() => openWebPage(option.url)}
+                    onPress={() => {
+                      if (option.action) {
+                        option.action();
+                      } else if (option.url) {
+                        openWebPage(option.url);
+                      }
+                    }}
                   >
+                    {option.isShare && (
+                      <Icon 
+                        name="share-outline" 
+                        size={20} 
+                        color={isDarkMode ? "#ffffff" : "#000000"} 
+                        style={styles.shareIcon}
+                      />
+                    )}
                     <Text style={[
                       styles.optionText,
-                      isDarkMode && styles.darkOptionText
+                      isDarkMode && styles.darkOptionText,
+                      option.isShare && styles.shareText
                     ]}>
                       {option.title}
                     </Text>
@@ -118,6 +231,8 @@ const styles = StyleSheet.create({
   option: {
     paddingVertical: 12,
     paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   optionBorder: {
     borderBottomWidth: 1,
@@ -132,6 +247,16 @@ const styles = StyleSheet.create({
   },
   darkOptionText: {
     color: '#FFFFFF',
+  },
+  shareOption: {
+    backgroundColor: '#000000',
+    borderRadius:"2px",
+  },
+  shareText: {
+    fontWeight: '500',
+  },
+  shareIcon: {
+    marginRight: 10,
   },
 });
 
