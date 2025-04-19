@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useDataSync } from './DataSyncContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface DataSyncInfoProps {
   isDarkMode: boolean;
@@ -10,19 +9,25 @@ interface DataSyncInfoProps {
 const DataSyncInfo: React.FC<DataSyncInfoProps> = ({ isDarkMode }) => {
   const { scheduledSyncTime, refreshEvents, lastSuccessfulSync } = useDataSync();
 
-  // Format time with leading zeros
   const formatTime = (hour: number, minutes: number) => {
     return `${hour < 10 ? '0' + hour : hour}:${minutes < 10 ? '0' + minutes : minutes}`;
   };
 
   const handleManualSync = () => {
-    refreshEvents();
+    Alert.alert(
+      'Confirmar sincronización',
+      '¿Estás seguro de que quieres sincronizar los datos nuevamente?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Sincronizar', onPress: () => refreshEvents() },
+      ],
+      { cancelable: true }
+    );
   };
 
-  // Format date for display
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Nunca';
-    
+
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString('es-ES', {
@@ -30,7 +35,7 @@ const DataSyncInfo: React.FC<DataSyncInfoProps> = ({ isDarkMode }) => {
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       });
     } catch (e) {
       return 'Fecha desconocida';
@@ -42,7 +47,7 @@ const DataSyncInfo: React.FC<DataSyncInfoProps> = ({ isDarkMode }) => {
       <Text style={[styles.title, isDarkMode && styles.darkText]}>
         Sincronización de datos
       </Text>
-      
+
       {scheduledSyncTime ? (
         <Text style={[styles.syncTime, isDarkMode && styles.darkText]}>
           Los datos se actualizan automáticamente a las {formatTime(scheduledSyncTime.hour, scheduledSyncTime.minutes)} cada día.
@@ -52,11 +57,11 @@ const DataSyncInfo: React.FC<DataSyncInfoProps> = ({ isDarkMode }) => {
           Cargando horario de sincronización...
         </Text>
       )}
-      
+
       <Text style={[styles.lastSyncText, isDarkMode && styles.darkText]}>
         Última sincronización: {formatDate(lastSuccessfulSync)}
       </Text>
-      
+
       <TouchableOpacity
         style={[styles.syncButton, isDarkMode && styles.darkSyncButton]}
         onPress={handleManualSync}
@@ -71,7 +76,7 @@ const DataSyncInfo: React.FC<DataSyncInfoProps> = ({ isDarkMode }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 24,
+    marginBottom: 14,
     padding: 16,
     borderRadius: 12,
     backgroundColor: '#F2F2F7',
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
   syncTime: {
     fontSize: 14,
     color: '#7f8c8d',
-    marginBottom: 8, // Reduced to accommodate the last sync text
+    marginBottom: 8,
   },
   lastSyncText: {
     fontSize: 13,
@@ -109,10 +114,12 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   darkSyncButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
   },
   darkSyncButtonText: {
-    color: '#000000',
+    color: '#FFFFFF',
   },
 });
 
