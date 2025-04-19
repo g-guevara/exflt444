@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:background="@android:color/white">
+
+    <!-- Left side: Day of week and day number -->
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="10dp">
+        
+        <TextView
+            android:id="@+id/text_day_of_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LUN"
+            android:textSize="12sp"
+            android:textColor="#7f8c8d" />
+             
+        <TextView
+            android:id="@+id/text_day_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="32sp"
+            android:textColor="#2c3e50" />
+    </LinearLayout>
+    
+    <!-- Right side: Events list -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="1dp">
+        
+        <!-- No events message -->
+        <TextView
+            android:id="@+id/text_no_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No hay eventos para hoy"
+            android:textSize="12sp"
+            android:textColor="#7f8c8d"
+            android:gravity="center"
+            android:paddingTop="10dp" />
+            
+        <!-- Event containers -->
+        <LinearLayout
+            android:id="@+id/events_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
+            
+            <!-- Event 1 -->
+            <LinearLayout
+                android:id="@+id/event_container_1"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:background="@drawable/event_background_blue"
+                android:visibility="gone">
+                
+                <TextView
+                    android:id="@+id/text_event_time_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+                    
+                <TextView
+                    android:id="@+id/text_event_title_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingLeft="8dp" />
+                    
+                <TextView
+                    android:id="@+id/text_event_room_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+            
+            <!-- Event 2 -->
+            <LinearLayout
+                android:id="@+id/event_container_2"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:background="@drawable/event_background_green"
+                android:visibility="gone">
+                
+                <TextView
+                    android:id="@+id/text_event_time_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+                    
+                <TextView
+                    android:id="@+id/text_event_title_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingLeft="8dp" />
+                    
+                <TextView
+                    android:id="@+id/text_event_room_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+            
+            <!-- Event 3 -->
+            <LinearLayout
+                android:id="@+id/event_container_3"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:background="@drawable/event_background_purple"
+                android:visibility="gone">
+                
+                <TextView
+                    android:id="@+id/text_event_time_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+                    
+                <TextView
+                    android:id="@+id/text_event_title_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingLeft="8dp" />
+                    
+                <TextView
+                    android:id="@+id/text_event_room_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <!-- "More events" indicator -->
+        <TextView
+            android:id="@+id/text_more_events"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text=""
+            android:textSize="10sp"
+            android:textColor="#7f8c8d"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="2dp"
+            android:layout_gravity="end"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@android:color/white">
+
+    <!-- Vista "No hay eventos" -->
+    <TextView
+        android:id="@+id/small_text_no_events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No hay eventos para hoy"
+        android:textSize="14sp"
+        android:textColor="#7f8c8d"
+        android:gravity="center"
+        android:layout_centerInParent="true" />
+
+    <!-- Contenedor para el evento más cercano -->
+    <LinearLayout
+        android:id="@+id/small_closest_event_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        
+        <!-- Hora en la píldora -->
+        <TextView
+            android:id="@+id/small_text_event_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:paddingVertical="3dp"
+            android:paddingHorizontal="10dp"
+            android:background="@drawable/pill_shape_background" />
+            
+        <!-- Número de la sala (texto grande) -->
+        <TextView
+            android:id="@+id/small_text_event_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="58sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginTop="2dp" />
+            
+        <!-- Nombre del evento -->
+        <TextView
+            android:id="@+id/small_text_event_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end" />
+    </LinearLayout>
+</RelativeLayout>
