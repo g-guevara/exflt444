@@ -126,14 +126,13 @@ const MenuOptions = () => {
       });
     }, 300);
   };
+
   
   // Opciones del menú
   const menuOptions: MenuOption[] = [
     { title: "Compartir mis eventos", isShare: true, action: shareSelectedEvents },
-    { title: "Sitio Oficial UAI", url: "https://www.uai.cl" },
-    { title: "Portal del Alumno", url: "https://portal.uai.cl" },
-    { title: "Moodle", url: "https://cursos.uai.cl" },
-    { title: "Acerca De", url: "https://github.com/memoguevara" }
+    { title: "Extenciones", url: "https://classkit-x2u6.vercel.app/" },
+    { title: "Feedback", url: "https://forms.gle/bd8GG162UKz7Svn56" }
   ];
 
   return (
