@@ -64,7 +64,7 @@ const MenuOptions = () => {
       }
       
       // Crear contenido de texto formateado
-      let textContent = "MIS EVENTOS SELECCIONADOS\n\n";
+      let textContent = "MIS EVENTOS\n\n";
       
       selectedEvents.forEach((event, index) => {
         // Determinar día de la semana
@@ -80,15 +80,14 @@ const MenuOptions = () => {
         }
         
         // Añadir evento al texto
-        textContent += `${index + 1}. ${event.Evento}\n`;
+        textContent += `## N${index + 1}. ${event.Evento}\n`;
         textContent += `   Tipo: ${event.Tipo}\n`;
         textContent += `   Día: ${diaSemana}\n`;
         textContent += `   Horario: ${event.Inicio.substring(0, 5)} - ${event.Fin.substring(0, 5)}\n`;
-        textContent += `   Ubicación: ${event.Sala}, ${event.Edificio}, ${event.Campus}\n\n`;
       });
       
       // Añadir pie de página
-      textContent += "Exportado desde la app 7io-locale";
+      textContent += "\nExportado desde la app Mis Salas ";
       
       // Compartir el contenido
       setTimeout(async () => {
